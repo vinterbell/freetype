@@ -8,6 +8,7 @@
         "build.zig.zon",
         "LICENSE.TXT",
         "src",
+        "include",
         // For example...
         //"LICENSE",
         //"README.md",
