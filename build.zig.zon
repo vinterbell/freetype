@@ -1,0 +1,15 @@
+.{
+    .name = .freetype,
+    .version = "2.13.3",
+    .minimum_zig_version = "0.15.0-dev.666+c04be630d",
+    .dependencies = .{},
+    .paths = .{
+        "build.zig",
+        "build.zig.zon",
+        "LICENSE.TXT",
+        "src",
+        // For example...
+        //"LICENSE",
+        //"README.md",
+    },
+}
