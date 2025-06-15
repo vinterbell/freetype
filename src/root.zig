@@ -65,7 +65,7 @@ pub const Bitmap = extern struct {
     pitch: c_int = 0,
     buffer: [*c]u8 = null,
     num_grays: c_ushort = 0,
-    pixel_mode: u8 = 0,
+    pixel_mode: Pixel_Mode = 0,
     palette_mode: u8 = 0,
     palette: ?*anyopaque = null,
 };
@@ -1274,3 +1274,28 @@ pub const PARAM_TAG_RANDOM_SEED = MAKE_TAG('s', 'e', 'e', 'd');
 pub const PARAM_TAG_STEM_DARKENING = MAKE_TAG('d', 'a', 'r', 'k');
 pub const PARAM_TAG_UNPATENTED_HINTING = MAKE_TAG('u', 'n', 'p', 'a');
 pub const LCD_FILTER_FIVE_TAPS = @as(c_int, 5);
+
+// svg
+
+pub const SVG_Lib_Init_Func = *const fn (data_pointer: Pointer) callconv(.C) Error;
+pub const SVG_Lib_Free_Func = *const fn (data_pointer: Pointer) callconv(.C) void;
+pub const SVG_Lib_Render_Func = *const fn (slot: GlyphSlot, data_pointer: Pointer) callconv(.C) Error;
+pub const SVG_Lib_Preset_Slot_Func = *const fn (slot: GlyphSlot, cache: Bool, data_pointer: Pointer) callconv(.C) Error;
+pub const SVG_RendererHooks = extern struct {
+    init: ?SVG_Lib_Init_Func = null,
+    free: ?SVG_Lib_Free_Func = null,
+    render: ?SVG_Lib_Render_Func = null,
+    preset_slot: ?SVG_Lib_Preset_Slot_Func = null,
+};
+
+pub const SVG_DocumentRec = extern struct {
+    svg_document: [*]Byte = null,
+    svg_document_length: ULong = 0,
+    metrics: Size_Metrics = .{},
+    units_per_EM: UShort = 0,
+    start_glyph_id: UShort = 0,
+    end_glyph_id: UShort = 0,
+    transform: Matrix = .{},
+    delta: Vector = .{},
+};
+pub const SVG_Document = [*c]SVG_DocumentRec;
