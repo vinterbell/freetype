@@ -1299,3 +1299,68 @@ pub const SVG_DocumentRec = extern struct {
     delta: Vector = .{},
 };
 pub const SVG_Document = [*c]SVG_DocumentRec;
+
+// module
+pub const MODULE_FONT_DRIVER = @as(c_int, 1);
+pub const MODULE_RENDERER = @as(c_int, 2);
+pub const MODULE_HINTER = @as(c_int, 4);
+pub const MODULE_STYLER = @as(c_int, 8);
+pub const MODULE_DRIVER_SCALABLE = @as(c_int, 0x100);
+pub const MODULE_DRIVER_NO_OUTLINES = @as(c_int, 0x200);
+pub const MODULE_DRIVER_HAS_HINTER = @as(c_int, 0x400);
+pub const MODULE_DRIVER_HINTS_LIGHTLY = @as(c_int, 0x800);
+
+pub const Module_Interface = *anyopaque;
+
+pub const Module_Constructor = ?*const fn (module: Module) callconv(.C) Error;
+pub const Module_Destructor = ?*const fn (module: Module) callconv(.C) void;
+pub const Module_Requester = ?*const fn (module: Module, name: [*c]const Byte) callconv(.C) Module_Interface;
+
+pub const Module_Class = extern struct {
+    module_flags: ULong = 0,
+    module_size: Long = 0,
+    module_name: [*c]const u8 = null,
+    module_version: Fixed = 0,
+    module_requires: Fixed = 0,
+    module_interface: Module_Interface = null,
+    module_init: Module_Constructor = null,
+    module_done: Module_Destructor = null,
+    get_interface: Module_Requester = null,
+};
+
+pub const Add_Module = FT_Add_Module;
+extern fn FT_Add_Module(library: Library, clazz: [*c]const Module_Class) callconv(.C) Error;
+pub const Get_Module = FT_Get_Module;
+extern fn FT_Get_Module(library: Library, module_name: [*c]const u8) callconv(.C) Module;
+pub const Remove_Module = FT_Remove_Module;
+extern fn FT_Remove_Module(library: Library, module: Module) callconv(.C) Error;
+
+pub const Property_Set = FT_Property_Set;
+extern fn FT_Property_Set(library: Library, module_name: [*c]const u8, property_name: [*c]const u8, value: [*c]const void) callconv(.C) Error;
+pub const Property_Get = FT_Property_Get;
+extern fn FT_Property_Get(library: Library, module_name: [*c]const u8, property_name: [*c]const u8, value: [*c]void) callconv(.C) Error;
+pub const Set_Default_Properties = FT_Set_Default_Properties;
+extern fn FT_Set_Default_Properties(library: Library) callconv(.C) void;
+pub const Reference_Library = FT_Reference_Library;
+extern fn FT_Reference_Library(library: Library) callconv(.C) Error;
+pub const New_Library = FT_New_Library;
+extern fn FT_New_Library(memory: Memory, alibrary: [*c]Library) callconv(.C) Error;
+pub const Done_Library = FT_Done_Library;
+extern fn FT_Done_Library(library: Library) callconv(.C) Error;
+
+pub const DebugHook_Func = *const fn (arg: [*c]void) callconv(.C) Error;
+pub const DEBUG_HOOK_TRUETYPE = @as(c_int, 0);
+pub const Set_Debug_Hook = FT_Set_Debug_Hook;
+extern fn FT_Set_Debug_Hook(library: Library, hook_index: ULong, debug_hook: DebugHook_Func) callconv(.C) void;
+
+pub const Add_Default_Modules = FT_Add_Default_Modules;
+extern fn FT_Add_Default_Modules(library: Library) callconv(.C) void;
+
+pub const TRUETYPE_ENGINE_TYPE = enum(c_uint) {
+    NONE = 0,
+    UNPATENTED = 1,
+    PATENTED = 2,
+};
+
+pub const Get_TrueType_Engine_Type = FT_Get_TrueType_Engine_Type;
+extern fn FT_Get_TrueType_Engine_Type(library: Library) callconv(.C) TRUETYPE_ENGINE_TYPE;
