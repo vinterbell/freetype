@@ -1336,9 +1336,9 @@ pub const Remove_Module = FT_Remove_Module;
 extern fn FT_Remove_Module(library: Library, module: Module) callconv(.C) Error;
 
 pub const Property_Set = FT_Property_Set;
-extern fn FT_Property_Set(library: Library, module_name: [*c]const u8, property_name: [*c]const u8, value: [*c]const void) callconv(.C) Error;
+extern fn FT_Property_Set(library: Library, module_name: [*c]const u8, property_name: [*c]const u8, value: *const anyopaque) callconv(.C) Error;
 pub const Property_Get = FT_Property_Get;
-extern fn FT_Property_Get(library: Library, module_name: [*c]const u8, property_name: [*c]const u8, value: [*c]void) callconv(.C) Error;
+extern fn FT_Property_Get(library: Library, module_name: [*c]const u8, property_name: [*c]const u8, value: *anyopaque) callconv(.C) Error;
 pub const Set_Default_Properties = FT_Set_Default_Properties;
 extern fn FT_Set_Default_Properties(library: Library) callconv(.C) void;
 pub const Reference_Library = FT_Reference_Library;
@@ -1348,7 +1348,7 @@ extern fn FT_New_Library(memory: Memory, alibrary: [*c]Library) callconv(.C) Err
 pub const Done_Library = FT_Done_Library;
 extern fn FT_Done_Library(library: Library) callconv(.C) Error;
 
-pub const DebugHook_Func = *const fn (arg: [*c]void) callconv(.C) Error;
+pub const DebugHook_Func = *const fn (arg: *anyopaque) callconv(.C) Error;
 pub const DEBUG_HOOK_TRUETYPE = @as(c_int, 0);
 pub const Set_Debug_Hook = FT_Set_Debug_Hook;
 extern fn FT_Set_Debug_Hook(library: Library, hook_index: ULong, debug_hook: DebugHook_Func) callconv(.C) void;
